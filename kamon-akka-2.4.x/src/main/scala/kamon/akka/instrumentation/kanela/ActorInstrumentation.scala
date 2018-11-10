@@ -17,7 +17,7 @@
 package kamon.akka.instrumentation.kanela
 
 import akka.kamon.instrumentation.kanela.advisor.{UnregisterMethodAdvisor, _}
-import akka.kamon.instrumentation.kanela.interceptor.{InvokeAllMethodInterceptor, ReplaceWithMethodInterceptor}
+import akka.kamon.instrumentation.kanela.interceptor.{ActorCellInvokeInterceptor, InvokeAllMethodInterceptor, ReplaceWithMethodInterceptor}
 import kamon.akka.instrumentation.kanela.mixin.{ActorInstrumentationMixin, RoutedActorCellInstrumentationMixin}
 import kanela.agent.scala.KanelaInstrumentation
 
@@ -41,11 +41,12 @@ class ActorInstrumentation extends KanelaInstrumentation {
     builder
       .withMixin(classOf[ActorInstrumentationMixin])
       .withAdvisorFor(Constructor, classOf[ActorCellConstructorAdvisor])
-      .withAdvisorFor(method("invoke"), classOf[InvokeMethodAdvisor])
+      //.withAdvisorFor(method("invoke"), classOf[InvokeMethodAdvisor])
       .withAdvisorFor(method("handleInvokeFailure"), classOf[HandleInvokeFailureMethodAdvisor])
       .withAdvisorFor(method("sendMessage").and(takesArguments(1)), classOf[SendMessageMethodAdvisor])
       .withAdvisorFor(method("terminate"), classOf[TerminateMethodAdvisor])
       .withInterceptorFor(method("invokeAll$1"), InvokeAllMethodInterceptor)
+      .withInterceptorFor(method("invoke"), ActorCellInvokeInterceptor)
       .build()
   }
 

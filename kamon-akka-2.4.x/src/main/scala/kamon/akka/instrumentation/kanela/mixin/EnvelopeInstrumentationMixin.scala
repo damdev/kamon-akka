@@ -22,9 +22,22 @@ import akka.kamon.instrumentation.{InstrumentedEnvelope, TimestampedContext}
   * Mixin for akka.dispatch.Envelope
   */
 class EnvelopeInstrumentationMixin extends InstrumentedEnvelope {
-  @volatile var timestampedContext: TimestampedContext = _
 
-  def setTimestampedContext(timestampedContext: TimestampedContext): Unit =
-    this.timestampedContext = timestampedContext
+  private var t: TimestampedContext = _
+  private var touched = false
+
+  def timestampedContext() = {
+    if(t == null) println("T es null")
+    if(touched) println("T es touched") else println("T no es touched")
+    t
+  }
+
+  def setTimestampedContext(timestampedContext: TimestampedContext): Unit = {
+    if(timestampedContext == null) {
+      println("A QUIEN CARAJOS SE LE OCURRE")
+    }
+    this.touched = true
+    this.t = timestampedContext
+  }
 }
 

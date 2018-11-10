@@ -38,6 +38,7 @@ object PublishMethodAdvisor {
       Metrics.forSystem(stream.system.name).deadLetters.increment()
     }
     case um: UnhandledMessage => Metrics.forSystem(stream.system.name).unhandledMessages.increment()
+    case a: akka.event.Logging.Error => println(a.cause.printStackTrace())
     case _ => ()
   }
 }

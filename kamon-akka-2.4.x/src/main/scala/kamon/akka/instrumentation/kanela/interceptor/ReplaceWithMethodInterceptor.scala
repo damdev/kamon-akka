@@ -61,8 +61,11 @@ object ReplaceWithMethodInterceptor {
 
         while (!queue.isEmpty) {
           queue.poll() match {
-            case e: Envelope with InstrumentedEnvelope => Kamon.withContext(e.timestampedContext().context) {
-              cell.asInstanceOf[Cell].sendMessage(e)
+            case e: Envelope with InstrumentedEnvelope => {
+              if (e.timestampedContext().context == null)  println("LA COASASJAISJAIOSJAOIJSAOIJSAOIJSAIOJASOI")
+              Kamon.withContext(e.timestampedContext().context) {
+                cell.asInstanceOf[Cell].sendMessage(e)
+              }
             }
           }
           drainSysmsgQueue()

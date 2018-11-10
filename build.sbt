@@ -70,7 +70,7 @@ lazy val kamonAkka25 = Project("kamon-akka-25", file("kamon-akka-2.5.x"))
 enableProperCrossScalaVersionTasks
 
 def resolveAgent: Seq[ModuleID] = {
-    val agent = Option(System.getProperty("agent")).getOrElse("aspectj")
+    val agent = Option(System.getProperty("agent")).getOrElse("kanela")
     if(agent.equalsIgnoreCase("kanela"))
         Seq("org.aspectj" % "aspectjweaver" % "1.9.1" % "compile", "io.kamon" % "kanela-agent" % "0.0.15" % "compile;test")
     else

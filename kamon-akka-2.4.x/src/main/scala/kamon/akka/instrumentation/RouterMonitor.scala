@@ -1,5 +1,7 @@
 package akka.kamon.instrumentation
 
+import java.util.concurrent.Callable
+
 import akka.actor.Cell
 import kamon.Kamon
 import kamon.akka.Metrics
@@ -8,6 +10,7 @@ import org.aspectj.lang.ProceedingJoinPoint
 
 trait RouterMonitor {
   def processMessage(pjp: ProceedingJoinPoint): AnyRef
+  def processMessage(callable: Callable[AnyRef]): AnyRef
   def processFailure(failure: Throwable): Unit
   def cleanup(): Unit
   def routeeAdded(): Unit
@@ -46,6 +49,8 @@ object NoOpRouterMonitor extends RouterMonitor {
 
   def processMessageStart(): Long = 0L
   def processMessageEnd(timestampBeforeProcessing: Long): Unit = {}
+
+  override def processMessage(callable: Callable[AnyRef]): AnyRef = callable.call()
 }
 
 class MetricsOnlyRouterMonitor(routerMetrics: RouterMetrics) extends RouterMonitor {
@@ -55,6 +60,18 @@ class MetricsOnlyRouterMonitor(routerMetrics: RouterMetrics) extends RouterMonit
 
     try {
       pjp.proceed()
+    } finally {
+      val timestampAfterProcessing = Kamon.clock().nanos()
+      val routingTime = timestampAfterProcessing - timestampBeforeProcessing
+
+      routerMetrics.routingTime.record(routingTime)
+    }
+  }
+
+  def processMessage(callable: Callable[AnyRef]): AnyRef = {
+    val timestampBeforeProcessing = Kamon.clock().nanos()
+    try {
+      callable.call()
     } finally {
       val timestampAfterProcessing = Kamon.clock().nanos()
       val routingTime = timestampAfterProcessing - timestampBeforeProcessing

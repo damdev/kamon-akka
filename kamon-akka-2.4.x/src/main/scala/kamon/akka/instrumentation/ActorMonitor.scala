@@ -18,6 +18,7 @@
 package akka.kamon.instrumentation
 
 import java.io.Closeable
+import java.util.concurrent.Callable
 
 import akka.actor.{ActorCell, ActorRef, ActorSystem, Cell}
 import akka.dispatch.Envelope
@@ -34,6 +35,7 @@ final case class Traveler(envelopeContext: TimestampedContext, closeable: Closea
 trait ActorMonitor {
   def captureEnvelopeContext(): TimestampedContext
   def processMessage(pjp: ProceedingJoinPoint, envelopeContext: TimestampedContext, envelope: Envelope): AnyRef
+  def processMessage2(callable: Callable[AnyRef], envelopeContext: TimestampedContext, envelope: Envelope): AnyRef
   def processFailure(failure: Throwable): Unit
   def processDroppedMessage(count: Long): Unit
   def cleanup(): Unit
@@ -108,6 +110,16 @@ object ActorMonitors {
         messageSpan.finish()
       }
     }
+    override def processMessage2(callable: Callable[AnyRef], envelopeContext: TimestampedContext, envelope: Envelope): AnyRef = {
+      val messageSpan = buildSpan(cellInfo, envelopeContext, envelope)
+      val contextWithMessageSpan = envelopeContext.context.withKey(Span.ContextKey, messageSpan)
+
+      try {
+        monitor.processMessage2(callable, envelopeContext.copy(context = contextWithMessageSpan), envelope)
+      } finally {
+        messageSpan.finish()
+      }
+    }
 
     override def processMessageStart(envelopeContext: TimestampedContext, envelope: Envelope): Traveler = {
       import CloseableSyntax._
@@ -150,7 +162,7 @@ object ActorMonitors {
     private val processedMessagesCounter = Metrics.forSystem(cellInfo.systemName).processedMessagesByNonTracked
 
     def captureEnvelopeContext(): TimestampedContext = {
-      val envelopeTimestamp = if(cellInfo.isTraced) Kamon.clock().nanos() else 0L
+      val envelopeTimestamp = if (cellInfo.isTraced) Kamon.clock().nanos() else 0L
       TimestampedContext(envelopeTimestamp, Kamon.currentContext())
     }
 
@@ -161,16 +173,24 @@ object ActorMonitors {
         pjp.proceed()
       }
     }
+    def processMessage2(callable: Callable[AnyRef], envelopeContext: TimestampedContext, envelope: Envelope): AnyRef = {
+      processedMessagesCounter.increment()
+
+      Kamon.withContext(envelopeContext.context) {
+        callable.call()
+      }
+    }
 
     def processFailure(failure: Throwable): Unit = {}
+
     def processDroppedMessage(count: Long): Unit = {}
+
     def cleanup(): Unit = {
       Metrics.forSystem(cellInfo.systemName).activeActors.decrement()
     }
 
     def processMessageStart(envelopeContext: TimestampedContext, envelope: Envelope): Traveler = {
       import CloseableSyntax._
-
       processedMessagesCounter.increment()
       val scope = Kamon.storeContext(envelopeContext.context)
       Traveler(envelopeContext, scope.toCloseable)
@@ -204,6 +224,27 @@ object ActorMonitors {
       try {
         Kamon.withContext(envelopeContext.context) {
           pjp.proceed()
+        }
+      } finally {
+        val timestampAfterProcessing = Kamon.clock().nanos()
+        val timeInMailbox = timestampBeforeProcessing - envelopeContext.nanoTime
+        val processingTime = timestampAfterProcessing - timestampBeforeProcessing
+
+        actorMetrics.foreach { am =>
+          am.processingTime.record(processingTime)
+          am.timeInMailbox.record(timeInMailbox)
+          am.mailboxSize.decrement()
+        }
+        recordProcessMetrics(processingTime, timeInMailbox)
+      }
+    }
+    def processMessage2(callable: Callable[AnyRef], envelopeContext: TimestampedContext, envelope: Envelope): AnyRef = {
+      val timestampBeforeProcessing = Kamon.clock().nanos()
+      processedMessagesCounter.increment()
+
+      try {
+        Kamon.withContext(envelopeContext.context) {
+          callable.call()
         }
       } finally {
         val timestampAfterProcessing = Kamon.clock().nanos()
@@ -280,6 +321,26 @@ object ActorMonitors {
       try {
         Kamon.withContext(envelopeContext.context) {
           pjp.proceed()
+        }
+      } finally {
+        val timestampAfterProcessing = Kamon.clock().nanos()
+        val timeInMailbox = timestampBeforeProcessing - envelopeContext.nanoTime
+        val processingTime = timestampAfterProcessing - timestampBeforeProcessing
+
+        routerMetrics.processingTime.record(processingTime)
+        routerMetrics.timeInMailbox.record(timeInMailbox)
+        routerMetrics.pendingMessages.decrement()
+        recordProcessMetrics(processingTime, timeInMailbox)
+      }
+    }
+
+    def processMessage2(callable: Callable[AnyRef], envelopeContext: TimestampedContext, envelope: Envelope): AnyRef = {
+      val timestampBeforeProcessing = Kamon.clock().nanos()
+      processedMessagesCounter.increment()
+
+      try {
+        Kamon.withContext(envelopeContext.context) {
+          callable.call()
         }
       } finally {
         val timestampAfterProcessing = Kamon.clock().nanos()
