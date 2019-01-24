@@ -18,7 +18,7 @@ package kamon.instrumentation.akka24.kanela.advisor
 
 import akka.actor.{ActorSystem, DeadLetter, UnhandledMessage}
 import akka.kamon.instrumentation.HasSystem
-import kamon.akka.Metrics
+import kamon.instrumentation.akka.Metrics
 import kanela.agent.libs.net.bytebuddy.asm.Advice.{Argument, OnMethodExit, This}
 
 

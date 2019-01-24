@@ -2,7 +2,7 @@ package akka.kamon.instrumentation
 
 
 import akka.actor.{ActorSystem, DeadLetter, UnhandledMessage}
-import kamon.akka.Metrics
+import kamon.instrumentation.akka.Metrics
 import org.aspectj.lang.annotation.{After, Aspect, DeclareMixin, Pointcut}
 
 trait HasSystem {

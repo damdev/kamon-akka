@@ -13,7 +13,7 @@
  * and limitations under the License.
  * =========================================================================================
  */
-package kamon.akka
+package kamon.instrumentation.akka
 
 import kamon.Kamon
 import kamon.metric.MeasurementUnit._

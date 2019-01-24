@@ -17,8 +17,8 @@
 package akka.kamon.instrumentation
 
 import akka.util.Timeout
-import kamon.akka.Akka
-import kamon.akka.AskPatternTimeoutWarningSettings.{Heavyweight, Lightweight, Off}
+import kamon.instrumentation.akka.Akka
+import kamon.instrumentation.akka.AskPatternTimeoutWarningSettings.{Heavyweight, Lightweight, Off}
 import akka.actor.{ActorRef, InternalActorRef}
 import akka.pattern.AskTimeoutException
 import kamon.Kamon

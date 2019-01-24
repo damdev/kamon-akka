@@ -23,8 +23,8 @@ import akka.actor.{ActorCell, ActorRef, ActorSystem, Cell}
 import akka.dispatch.Envelope
 import akka.kamon.instrumentation.ActorMonitors.{TracedMonitor, TrackedActor, TrackedRoutee}
 import kamon.Kamon
-import kamon.akka.Metrics
-import kamon.akka.Metrics.{ActorGroupMetrics, ActorMetrics, RouterMetrics}
+import kamon.instrumentation.akka.Metrics
+import kamon.instrumentation.akka.Metrics.{ActorGroupMetrics, ActorMetrics, RouterMetrics}
 import kamon.context.Storage.Scope
 import kamon.trace.Span
 import org.aspectj.lang.ProceedingJoinPoint

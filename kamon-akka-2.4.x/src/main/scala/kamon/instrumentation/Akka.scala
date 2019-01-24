@@ -14,12 +14,12 @@
  * =========================================================================================
  */
 
-package kamon.akka
+package kamon.instrumentation.akka
 
 import com.typesafe.config.Config
 import kamon.Configuration.OnReconfigureHook
 import kamon.Kamon
-import kamon.akka.AskPatternTimeoutWarningSettings.Off
+import kamon.instrumentation.akka.AskPatternTimeoutWarningSettings.Off
 import kamon.util.Matcher
 
 import scala.collection.JavaConverters._

@@ -24,7 +24,7 @@ import akka.kamon.instrumentation.LookupDataAware.LookupData
 import DispatcherInstrumentationAdvisors.{extractExecutor, registerDispatcher, registeredDispatchers}
 import akka.kamon.instrumentation.{ActorSystemAware, LookupDataAware}
 import kamon.Kamon
-import kamon.akka.Akka
+import kamon.instrumentation.akka.Akka
 import kamon.instrumentation.akka24.kanela.bridge.AkkaDispatcherBridge
 import kamon.executors.Executors
 import kamon.util.Registration

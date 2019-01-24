@@ -24,7 +24,7 @@ import akka.dispatch.ForkJoinExecutorConfigurator.AkkaForkJoinPool
 import akka.dispatch._
 import akka.kamon.instrumentation.LookupDataAware.LookupData
 import kamon.Kamon
-import kamon.akka.Akka
+import kamon.instrumentation.akka.Akka
 import kamon.executors.Executors
 import kamon.util.Registration
 import org.aspectj.lang.ProceedingJoinPoint

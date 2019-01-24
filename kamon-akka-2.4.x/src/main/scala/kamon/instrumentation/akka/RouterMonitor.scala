@@ -2,8 +2,8 @@ package akka.kamon.instrumentation
 
 import akka.actor.Cell
 import kamon.Kamon
-import kamon.akka.Metrics
-import kamon.akka.Metrics.RouterMetrics
+import kamon.instrumentation.akka.Metrics
+import kamon.instrumentation.akka.Metrics.RouterMetrics
 import org.aspectj.lang.ProceedingJoinPoint
 
 trait RouterMonitor {

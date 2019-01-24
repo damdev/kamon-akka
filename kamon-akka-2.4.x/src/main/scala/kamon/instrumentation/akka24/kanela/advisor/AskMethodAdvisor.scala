@@ -21,8 +21,8 @@ import akka.kamon.instrumentation.AskPatternInstrumentation
 import akka.pattern.AskTimeoutException
 import akka.util.Timeout
 import kamon.Kamon
-import kamon.akka.Akka
-import kamon.akka.AskPatternTimeoutWarningSettings.{Heavyweight, Lightweight, Off}
+import kamon.instrumentation.akka.Akka
+import kamon.instrumentation.akka.AskPatternTimeoutWarningSettings.{Heavyweight, Lightweight, Off}
 import kamon.context.Context
 import kamon.util.CallingThreadExecutionContext
 import kanela.agent.libs.net.bytebuddy.asm.Advice.{Argument, OnMethodExit, Origin, Return}
