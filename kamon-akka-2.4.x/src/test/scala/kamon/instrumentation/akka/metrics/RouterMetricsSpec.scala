@@ -18,7 +18,6 @@ package kamon.instrumentation.akka.metrics
 import akka.actor._
 import akka.routing._
 import akka.testkit.{ImplicitSender, TestKit, TestProbe}
-import kamon.instrumentation.akka.Metrics
 import kamon.instrumentation.akka.Metrics._
 import kamon.instrumentation.akka.metrics.RouterMetricsTestActor._
 import kamon.testkit.MetricInspection

@@ -48,7 +48,7 @@ class MessageTracingSpec extends TestKit(ActorSystem("MessageTracing")) with Wor
         spanTags("component") shouldBe "akka.actor"
         spanTags("akka.system") shouldBe "MessageTracing"
         spanTags("akka.actor.path") shouldBe "MessageTracing/user/traced"
-        spanTags("akka.actor.class") shouldBe "kamon.akka.instrumentation.TracingTestActor"
+        spanTags("akka.actor.class") shouldBe "kamon.instrumentation.akka.TracingTestActor"
         spanTags("akka.actor.message-class") shouldBe "String"
       }
     }
@@ -68,7 +68,7 @@ class MessageTracingSpec extends TestKit(ActorSystem("MessageTracing")) with Wor
         spanTags("component") shouldBe "akka.actor"
         spanTags("akka.system") shouldBe "MessageTracing"
         spanTags("akka.actor.path") shouldBe "MessageTracing/user/traced-first"
-        spanTags("akka.actor.class") shouldBe "kamon.akka.instrumentation.TracingTestActor"
+        spanTags("akka.actor.class") shouldBe "kamon.instrumentation.akka.TracingTestActor"
         spanTags("akka.actor.message-class") should include("ActorRef")
 
         span.context.spanID
@@ -83,7 +83,7 @@ class MessageTracingSpec extends TestKit(ActorSystem("MessageTracing")) with Wor
         spanTags("component") shouldBe "akka.actor"
         spanTags("akka.system") shouldBe "MessageTracing"
         spanTags("akka.actor.path") shouldBe "MessageTracing/user/traced-second"
-        spanTags("akka.actor.class") shouldBe "kamon.akka.instrumentation.TracingTestActor"
+        spanTags("akka.actor.class") shouldBe "kamon.instrumentation.akka.TracingTestActor"
         spanTags("akka.actor.message-class") shouldBe "String"
       }
     }
@@ -104,7 +104,7 @@ class MessageTracingSpec extends TestKit(ActorSystem("MessageTracing")) with Wor
         spanTags("component") shouldBe "akka.actor"
         spanTags("akka.system") shouldBe "MessageTracing"
         spanTags("akka.actor.path") shouldBe "MessageTracing/user/traced-chain-first"
-        spanTags("akka.actor.class") shouldBe "kamon.akka.instrumentation.TracingTestActor"
+        spanTags("akka.actor.class") shouldBe "kamon.instrumentation.akka.TracingTestActor"
         spanTags("akka.actor.message-class") should include("Tuple2")
 
         span.context.spanID
@@ -119,7 +119,7 @@ class MessageTracingSpec extends TestKit(ActorSystem("MessageTracing")) with Wor
         spanTags("component") shouldBe "akka.actor"
         spanTags("akka.system") shouldBe "MessageTracing"
         spanTags("akka.actor.path") shouldBe "MessageTracing/user/traced-chain-last"
-        spanTags("akka.actor.class") shouldBe "kamon.akka.instrumentation.TracingTestActor"
+        spanTags("akka.actor.class") shouldBe "kamon.instrumentation.akka.TracingTestActor"
         spanTags("akka.actor.message-class") shouldBe "String"
       }
     }

@@ -19,11 +19,11 @@ import akka.actor._
 import akka.routing._
 import akka.testkit.{ImplicitSender, TestKit, TestProbe}
 import kamon.instrumentation.akka.Metrics._
+import kamon.instrumentation.akka.metrics.RouterMetricsTestActor._
 import kamon.testkit.MetricInspection
 import org.scalactic.TimesOnInt._
 import org.scalatest.concurrent.Eventually
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpecLike}
-import kamon.instrumentation.akka.metrics.RouterMetricsTestActor._
 
 import scala.concurrent.duration._
 

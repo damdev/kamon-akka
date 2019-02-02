@@ -20,7 +20,7 @@ import akka.dispatch.MessageDispatcher
 import akka.routing.BalancingPool
 import akka.testkit.{ImplicitSender, TestKit, TestProbe}
 import kamon.executors.Metrics._
-import kamon.instrumentation.akka.metrics.ActorMetricsTestActor._
+import kamon.instrumentation.akka.metrics.RouterMetricsTestActor._
 import kamon.testkit.MetricInspection
 import org.scalatest.concurrent.Eventually
 import org.scalatest.{BeforeAndAfterAll, Matchers, WordSpecLike}
